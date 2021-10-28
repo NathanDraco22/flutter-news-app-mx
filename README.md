@@ -1,6 +1,6 @@
-# news_app
+# news_app_mx
 
-A new Flutter project.
+A simple app to fetch news from News Api.
 
 ## Getting Started
 
