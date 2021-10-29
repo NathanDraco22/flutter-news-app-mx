@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:news_app/src/pages/tabs_page.dart';
 import 'package:news_app/src/scroll/custom_scroll.dart';

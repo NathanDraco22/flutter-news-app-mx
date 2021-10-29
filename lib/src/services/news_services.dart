@@ -83,7 +83,7 @@ class NewsService with ChangeNotifier{
 
     selectedCategory = category;
 
-    if (! mapCategories.containsKey(category)){
+    if (!mapCategories.containsKey(category)){
 
       isLoadingCategory = true;
       notifyListeners();
@@ -98,6 +98,7 @@ class NewsService with ChangeNotifier{
 
       isLoadingCategory = false;
       notifyListeners();
+  
     
     }
 
