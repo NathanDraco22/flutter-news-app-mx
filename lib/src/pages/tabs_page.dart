@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/src/pages/tab1_page.dart';
 import 'package:news_app/src/pages/tab2_page.dart';
+import 'package:news_app/src/services/news_services.dart';
 import 'package:provider/provider.dart';
 
 
@@ -36,7 +37,17 @@ class _Navigation extends StatelessWidget {
     return BottomNavigationBar(
       backgroundColor: Colors.grey[900],
       currentIndex: navigation.currentPage,
-      onTap: (i) => navigation.currentPage = i,
+      onTap: (i) {
+
+        navigation.currentPage = i;
+
+        final NewsService newsService =
+          Provider.of<NewsService>(context, listen: false);
+
+        if (i > 0) newsService.loadFromDB("favorites");
+
+        
+      } ,
       items:  const [
         BottomNavigationBarItem(
           label: "For You",
@@ -81,8 +92,6 @@ class _Pages extends StatelessWidget {
 
 class _NavigationModel with ChangeNotifier{
 
-
-
   int _currentPage = 0;
 
   final PageController _pageController = PageController();
@@ -97,6 +106,7 @@ class _NavigationModel with ChangeNotifier{
       duration: const Duration(milliseconds: 500), 
       curve: Curves.easeOut);
     _currentPage = value;
+
     notifyListeners();
   }
 

@@ -1,6 +1,10 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive/hive.dart';
+import 'package:news_app/main.dart';
 import 'package:news_app/src/models/category_model.dart';
 import 'package:news_app/src/models/news_models.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +19,7 @@ class NewsService with ChangeNotifier{
   bool isLoadingCategory = false;
 
   List<Category> categories = [
+    Category(icon: Icons.star, name: "favorites"),
     Category(icon: FontAwesomeIcons.building, name: "business"),
     Category(icon: FontAwesomeIcons.tv, name: "entertainment"),
     Category(icon: FontAwesomeIcons.addressCard, name: "general"),
@@ -54,8 +59,6 @@ class NewsService with ChangeNotifier{
 
     });
 
-
-
     getTopHeadlines();
 
     getNewsByCategory(_selectedCategory);
@@ -64,10 +67,8 @@ class NewsService with ChangeNotifier{
 
 //------------------------------------------------------------------------------
 
-
   getTopHeadlines() async {
     
-
     const url = "$_URL_NEWS/top-headlines?country=mx&apiKey=$_API_KEY"; 
 
     final resp = await http.get(Uri.parse(url));
@@ -83,7 +84,7 @@ class NewsService with ChangeNotifier{
 
     selectedCategory = category;
 
-    if (!mapCategories.containsKey(category)){
+    if (!mapCategories.containsKey(category) && category != "favorites"){
 
       isLoadingCategory = true;
       notifyListeners();
@@ -98,11 +99,66 @@ class NewsService with ChangeNotifier{
 
       isLoadingCategory = false;
       notifyListeners();
-  
-    
+    }else if (category == "favorites"){
+
+      loadFromDB(category);
+
     }
 
-    
+ 
+ 
+  }
 
+  Map<String,Article> newsFavoritesMap = {};
+
+  addToFavorite(Article article)async{
+
+    String keyBox = generateKeyId(article);
+    String jsonString = json.encode(article.toJson());
+
+    await Hive.box(newsFatoritesBox).put(keyBox,jsonString);
+
+    newsFavoritesMap[keyBox] = article;
+
+    notifyListeners();
+
+  }
+
+  removeFromFavorite(Article article)async{
+
+    String keyBox = generateKeyId(article);
+
+    await Hive.box(newsFatoritesBox).delete(keyBox);
+
+    newsFavoritesMap.remove(keyBox);
+
+    notifyListeners();
+  }
+
+  loadFromDB(String category){
+          final Iterable dataFromDB = Hive.box(newsFatoritesBox).values;
+
+      final List<Article> listArticleFromDB = dataFromDB.map((e){
+
+        final jsonMap = json.decode(e);
+
+        return Article.fromJson(jsonMap);
+
+      }).toList();
+
+      mapCategories[category] = listArticleFromDB;
+
+      notifyListeners();
+  }  
+
+  String generateKeyId(Article article) {
+    
+    final utf8String = article.title.substring(0,10) + article.author;
+
+    final asciiString = utf8String.replaceAll(RegExp("[^\\x00-\\x7F]"), "");
+
+
+
+    return asciiString;
   }
 }

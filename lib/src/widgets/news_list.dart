@@ -1,7 +1,12 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:news_app/main.dart';
 import 'package:news_app/src/models/news_models.dart';
+import 'package:news_app/src/services/news_services.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 
 
 
@@ -13,6 +18,8 @@ class ListaNoticias extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return ListView.builder(
       controller: ScrollController(),
       itemCount: newsList.length,
@@ -44,7 +51,7 @@ class _NewsWidget extends StatelessWidget {
         _TarjetaTopBar(noticia: noticia,),
         _TarjetaTitulo(noticia: noticia,),
         _TarjetaImagen(noticia: noticia,),
-        const _TarjetaBotones(),
+        _TarjetaBotones(noticia: noticia,),
         const Divider(thickness: 2.0,),
       ],
     );
@@ -54,14 +61,18 @@ class _NewsWidget extends StatelessWidget {
 class _TarjetaBotones extends StatelessWidget {
 
   final bool rigth;
+  final Article noticia;
 
   const _TarjetaBotones({
     Key? key,
-    this.rigth = false
+    this.rigth = false,
+    required this.noticia,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+     final NewsService newsService = Provider.of<NewsService>(context);
 
     List<double> borderButtons = [40.0,16.0];
     List<Color?>  buttonsColors = [Colors.blue[400] ,Colors.green[400]];
@@ -71,6 +82,12 @@ class _TarjetaBotones extends StatelessWidget {
       buttonsColors = buttonsColors.reversed.toList();
     }
 
+    final bool isFavorite = 
+      Hive.box(newsFatoritesBox).containsKey(newsService.generateKeyId(noticia));
+
+    final Icon iconFavorite = isFavorite 
+      ? const Icon(Icons.star_rate_rounded, size: 34, color: Colors.yellow,)
+      : const Icon(Icons.star_outline_rounded, size: 32);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -79,8 +96,8 @@ class _TarjetaBotones extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 5),
           width: 64,
           child: MaterialButton(
-            child: const Icon(Icons.star_rate_rounded, size: 36),
-            color: buttonsColors[0],
+            child: iconFavorite,
+            color: isFavorite ? Colors.blue[800] : buttonsColors[0],
             shape: RoundedRectangleBorder(
               borderRadius: 
                 BorderRadius.horizontal(
@@ -88,7 +105,17 @@ class _TarjetaBotones extends StatelessWidget {
                   right: Radius.circular(borderButtons[0]) 
                 )
             ),
-            onPressed: (){}
+            onPressed: (){
+             
+
+              if (isFavorite){
+                newsService.removeFromFavorite(noticia);
+              }else{
+                newsService.addToFavorite(noticia);
+              }
+
+
+            }
           ),
         ),
         
@@ -105,10 +132,15 @@ class _TarjetaBotones extends StatelessWidget {
                   right: Radius.circular(borderButtons[0]) 
                 )
             ),
-            onPressed: (){}
+            onPressed: ()async {
+
+              if (await urlLauncher.canLaunch(noticia.url)){
+
+                urlLauncher.launch(noticia.url);
+              }
+            }
           ),
         )
-
       ],
     );
   }

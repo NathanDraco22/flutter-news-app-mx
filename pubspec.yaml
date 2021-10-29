@@ -37,6 +37,11 @@ dependencies:
   provider:
   http:
   font_awesome_flutter:
+  url_launcher: ^6.0.12
+
+#-- Hive DB --
+  hive: ^2.0.4
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:
