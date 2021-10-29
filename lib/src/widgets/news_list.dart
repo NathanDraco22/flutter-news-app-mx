@@ -6,7 +6,7 @@ import 'package:news_app/main.dart';
 import 'package:news_app/src/models/news_models.dart';
 import 'package:news_app/src/services/news_services.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 
 
@@ -134,9 +134,9 @@ class _TarjetaBotones extends StatelessWidget {
             ),
             onPressed: ()async {
 
-              if (await urlLauncher.canLaunch(noticia.url)){
+              if (await url_launcher.canLaunch(noticia.url)){
 
-                urlLauncher.launch(noticia.url);
+                url_launcher.launch(noticia.url);
               }
             }
           ),

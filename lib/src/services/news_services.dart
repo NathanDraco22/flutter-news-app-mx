@@ -11,8 +11,8 @@ import 'package:http/http.dart' as http;
 
 
 
-const _URL_NEWS = "https://newsapi.org/v2";
-const _API_KEY = "2f455f3a5a4d40cf90d3208de7771658";
+const urlNEWS = "https://newsapi.org/v2";
+const apiKEY = "2f455f3a5a4d40cf90d3208de7771658";
 
 class NewsService with ChangeNotifier{
 
@@ -69,7 +69,7 @@ class NewsService with ChangeNotifier{
 
   getTopHeadlines() async {
     
-    const url = "$_URL_NEWS/top-headlines?country=mx&apiKey=$_API_KEY"; 
+    const url = "$urlNEWS/top-headlines?country=mx&apiKey=$apiKEY"; 
 
     final resp = await http.get(Uri.parse(url));
 
@@ -89,7 +89,7 @@ class NewsService with ChangeNotifier{
       isLoadingCategory = true;
       notifyListeners();
 
-      final url = "$_URL_NEWS/top-headlines?country=mx&apiKey=$_API_KEY&category=$category"; 
+      final url = "$urlNEWS/top-headlines?country=mx&apiKey=$apiKEY&category=$category"; 
 
       final resp = await http.get(Uri.parse(url));
 
