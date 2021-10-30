@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:news_app/src/pages/tabs_page.dart';
 import 'package:news_app/src/scroll/custom_scroll.dart';
@@ -7,8 +6,6 @@ import 'package:news_app/src/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-
 
 const newsFatoritesBox = "newsFavorites" ;
 
