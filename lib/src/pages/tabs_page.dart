@@ -12,14 +12,15 @@ class TabPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
     return ChangeNotifierProvider(
+      
       create: ( _ ) => _NavigationModel(),
+
       child: const Scaffold(
           body:  _Pages(),
           bottomNavigationBar: 
             _Navigation(),
-        ),
+      ),
     );
   }
 }
@@ -44,10 +45,11 @@ class _Navigation extends StatelessWidget {
         final NewsService newsService =
           Provider.of<NewsService>(context, listen: false);
 
-        if (i > 0) newsService.loadFromDB("favorites");
+        newsService.currentPageOption = i;
 
+        if (i > 0) newsService.loadFromDB("favorites");
         
-      } ,
+      },
       items:  const [
         BottomNavigationBarItem(
           label: "For You",
@@ -76,15 +78,12 @@ class _Pages extends StatelessWidget {
     return PageView(
       controller: navigationModel.pageController,
       physics: const NeverScrollableScrollPhysics(),
-      children: [
+      children: const [
 
-        const Tab1Page(),
+        Tab1Page(),
 
-        const Tab2Page(),
+        Tab2Page(),
 
-        Container(
-          color: Colors.blue,
-        )
       ],
     );
   }
@@ -101,13 +100,16 @@ class _NavigationModel with ChangeNotifier{
   PageController get pageController => _pageController;
 
   set currentPage(int value){
+
     _pageController.animateToPage(
       value, 
       duration: const Duration(milliseconds: 500), 
       curve: Curves.easeOut);
+    
     _currentPage = value;
 
     notifyListeners();
+ 
   }
 
 }

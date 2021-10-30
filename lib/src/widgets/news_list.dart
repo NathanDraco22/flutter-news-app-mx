@@ -19,7 +19,6 @@ class ListaNoticias extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
     return ListView.builder(
       controller: ScrollController(),
       itemCount: newsList.length,
@@ -137,7 +136,9 @@ class _TarjetaBotones extends StatelessWidget {
               if (await url_launcher.canLaunch(noticia.url)){
 
                 url_launcher.launch(noticia.url);
+              
               }
+
             }
           ),
         )

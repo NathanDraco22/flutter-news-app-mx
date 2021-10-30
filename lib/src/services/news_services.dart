@@ -17,6 +17,7 @@ const apiKEY = "2f455f3a5a4d40cf90d3208de7771658";
 class NewsService with ChangeNotifier{
 
   bool isLoadingCategory = false;
+  int currentPageOption = 0;
 
   List<Category> categories = [
     Category(icon: Icons.star, name: "favorites"),
@@ -26,9 +27,7 @@ class NewsService with ChangeNotifier{
     Category(icon: FontAwesomeIcons.headSideVirus, name: "health"),
     Category(icon: FontAwesomeIcons.vials, name: "science"),
     Category(icon: FontAwesomeIcons.volleyballBall, name: "sports"),
-    Category(icon: FontAwesomeIcons.memory, name: "technology")
-
-
+    Category(icon: FontAwesomeIcons.memory, name: "technology"),
   ];
 
   String _selectedCategory = "business";
@@ -38,7 +37,6 @@ class NewsService with ChangeNotifier{
   String get selectedCategory => _selectedCategory;
 
   List<Article> get getSelectedCategoryNews => mapCategories[_selectedCategory]!;
-
 
 
   set selectedCategory(String value){
@@ -99,14 +97,13 @@ class NewsService with ChangeNotifier{
 
       isLoadingCategory = false;
       notifyListeners();
+
     }else if (category == "favorites"){
 
       loadFromDB(category);
 
     }
 
- 
- 
   }
 
   Map<String,Article> newsFavoritesMap = {};
@@ -136,7 +133,7 @@ class NewsService with ChangeNotifier{
   }
 
   loadFromDB(String category){
-          final Iterable dataFromDB = Hive.box(newsFatoritesBox).values;
+      final Iterable dataFromDB = Hive.box(newsFatoritesBox).values;
 
       final List<Article> listArticleFromDB = dataFromDB.map((e){
 
@@ -156,8 +153,6 @@ class NewsService with ChangeNotifier{
     final utf8String = article.title.substring(0,10) + article.author;
 
     final asciiString = utf8String.replaceAll(RegExp("[^\\x00-\\x7F]"), "");
-
-
 
     return asciiString;
   }

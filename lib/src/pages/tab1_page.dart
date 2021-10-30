@@ -10,9 +10,11 @@ class Tab1Page extends StatefulWidget {
 
   @override
   State<Tab1Page> createState() => _Tab1PageState();
+
 }
 
 class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin {
+
   @override
   bool get wantKeepAlive => true;
   
@@ -29,7 +31,6 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin 
       :
       ListaNoticias(newsList: newsService.headlines);
   }
-
 
 }
 

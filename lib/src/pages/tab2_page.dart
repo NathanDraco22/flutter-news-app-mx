@@ -1,11 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:news_app/src/models/category_model.dart';
 import 'package:news_app/src/services/news_services.dart';
 import 'package:news_app/src/widgets/news_list.dart';
 import 'package:provider/provider.dart';
-
 
 
 class Tab2Page extends StatefulWidget {
@@ -32,7 +29,7 @@ class _Tab2PageState extends State<Tab2Page> with AutomaticKeepAliveClientMixin{
           const _ListaCategorias(),
 
           //------loading news by categories
-          newsService.isLoadingCategory 
+          (newsService.isLoadingCategory) 
           ? 
           const Center(child: Padding(
             padding: EdgeInsets.only(top: 16),
@@ -41,11 +38,11 @@ class _Tab2PageState extends State<Tab2Page> with AutomaticKeepAliveClientMixin{
           :
           Expanded(child: ListaNoticias(newsList: newsService.getSelectedCategoryNews)),
           //----------------------------
+
         ],) ,
       ),
     );
   }
-
 
 }
 
@@ -59,14 +56,11 @@ class _ListaCategorias extends StatelessWidget {
 
     final catogories = Provider.of<NewsService>(context).categories;
 
-    
-
     return Container(
       width: double.infinity,
       height: 90,
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.red, width: 1))
-
       ),
       child: ListView.builder(
         controller: ScrollController(),
@@ -84,10 +78,9 @@ class _ListaCategorias extends StatelessWidget {
                 _IconContainer(catogory: catogories[index]),
                 const SizedBox(height: 4,),
                 Text("${cName[0].toUpperCase()}${cName.substring(1)}"),
-                
               ],
             ),
-            );
+          );
         },
       ),
     );
@@ -111,6 +104,7 @@ class _IconContainer extends StatelessWidget {
     return GestureDetector (
       onTap: ()=> newsService.getNewsByCategory(catogory.name),
       child: Container(
+
         margin: const EdgeInsets.symmetric(horizontal: 10),
         width: 50,
         height: 50,
@@ -119,8 +113,8 @@ class _IconContainer extends StatelessWidget {
           shape: BoxShape.circle
         ),
         child: Icon(catogory.icon)
-        
-        ),
+      
+      ),
     );
   }
 }
